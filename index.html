@@ -58,6 +58,11 @@
     .vote-option input { accent-color:var(--accent); }
     .vote-form button { padding:11px 16px; border:0; border-radius:999px; background:var(--accent); color:#fff; font:inherit; cursor:pointer; }
     .vote-form button:disabled { opacity:.6; cursor:wait; }
+    .organizer-form { display:grid; gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+    .organizer-form input[type="password"] { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font:inherit; }
+    .organizer-form button { justify-self:start; padding:9px 14px; border:1px solid var(--accent); border-radius:999px; background:transparent; color:var(--accent); font:inherit; cursor:pointer; }
+    .organizer-form button:disabled { opacity:.6; cursor:wait; }
+    .poll-closed { margin:0; padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--card); color:var(--accent); font-weight:750; }
     .vote-message { min-height:1.6em; margin:0; color:var(--muted); font-size:.9rem; }
     .vote-results { display:grid; gap:8px; margin-top:14px; }
     .vote-result { display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border-bottom:1px solid var(--line); }
@@ -128,6 +133,12 @@
         <p class="vote-message" id="vote-message" role="status" aria-live="polite"></p>
       </form>
       <div class="vote-results" id="vote-results" aria-live="polite"></div>
+      <form class="organizer-form" id="organizer-form">
+        <label for="organizer-secret" class="note">結束投票（主揪用）</label>
+        <input id="organizer-secret" name="secret" type="password" autocomplete="off" placeholder="請輸入主揪密語" required>
+        <button type="submit">結束投票</button>
+        <p class="vote-message" id="organizer-message" role="status" aria-live="polite"></p>
+      </form>
     </section>
   </main>
   <script>
@@ -150,11 +161,27 @@
     const SUPABASE_URL = 'https://vrjecrwurazxvskjiylm.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_DCUPiKoDB6Ilw8lAmrTa7Q_Aec8vcjn';
     const voteEndpoint = `${SUPABASE_URL}/rest/v1/dinner_votes`;
+    const statusEndpoint = `${SUPABASE_URL}/rest/v1/poll_status?id=eq.1&select=is_closed`;
+    const closePollEndpoint = `${SUPABASE_URL}/functions/v1/close-poll`;
     const voteHeaders = { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` };
     const voteForm = document.querySelector('#vote-form');
     const voteMessage = document.querySelector('#vote-message');
     const voteResults = document.querySelector('#vote-results');
     const voteOptions = ['台南小吃', '牛肉湯', '火鍋'];
+    const organizerForm = document.querySelector('#organizer-form');
+    const organizerMessage = document.querySelector('#organizer-message');
+
+    function showClosedPoll() {
+      organizerForm.remove();
+      voteForm.outerHTML = '<p class="poll-closed" role="status">投票已結束</p>';
+    }
+
+    async function loadPollStatus() {
+      const response = await fetch(statusEndpoint, { headers: voteHeaders });
+      if (!response.ok) throw new Error('無法讀取投票狀態');
+      const rows = await response.json();
+      if (rows[0]?.is_closed) showClosedPoll();
+    }
 
     async function loadVoteResults() {
       const response = await fetch(`${voteEndpoint}?select=choice` , { headers: voteHeaders });
@@ -187,7 +214,30 @@
       }
     });
 
-    loadVoteResults().catch(() => { voteMessage.textContent = '目前無法載入投票結果，請稍後再試。'; });
+    organizerForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = organizerForm.querySelector('button');
+      button.disabled = true;
+      organizerMessage.textContent = '確認中…';
+      const formData = new FormData(organizerForm);
+      try {
+        const response = await fetch(closePollEndpoint, {
+          method: 'POST',
+          headers: { ...voteHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ secret: String(formData.get('secret')) })
+        });
+        if (!response.ok) throw new Error('密語不正確，投票尚未結束。');
+        organizerForm.reset();
+        showClosedPoll();
+        await loadVoteResults();
+      } catch (error) {
+        organizerMessage.textContent = error.message;
+      } finally {
+        if (document.body.contains(button)) button.disabled = false;
+      }
+    });
+
+    Promise.all([loadPollStatus(), loadVoteResults()]).catch(() => { voteMessage.textContent = '目前無法載入投票結果，請稍後再試。'; });
   </script>
 </body>
 </html>
