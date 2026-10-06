@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>隨意遊走｜台南</title>
+  <style>
+    :root { color-scheme: light; --ink:#2f2a25; --muted:#766d64; --cream:#fffaf2; --card:#ffffff; --accent:#b8573d; --line:#eadfd2; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--cream); color:var(--ink); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", sans-serif; line-height:1.7; }
+    main { width:min(100% - 32px, 680px); margin:0 auto; padding:28px 0 40px; }
+    header { padding:28px 4px 26px; }
+    .eyebrow { margin:0 0 8px; color:var(--accent); font-size:.9rem; font-weight:700; letter-spacing:.14em; }
+    h1 { margin:0; font-size:clamp(2.1rem, 10vw, 3.6rem); line-height:1.15; letter-spacing:.04em; }
+    .intro { margin:14px 0 0; color:var(--muted); font-size:1rem; }
+    .day { margin-top:22px; }
+    .day-title { display:flex; align-items:baseline; gap:10px; margin:0 0 12px; }
+    .day-title h2 { margin:0; font-size:1.55rem; }
+    .day-title span { color:var(--muted); font-size:.9rem; }
+    .stops { display:grid; gap:12px; }
+    .stop { display:grid; grid-template-columns:78px 1fr; gap:12px; padding:16px; background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 3px 12px rgba(82,55,35,.05); }
+    time { color:var(--accent); font-weight:800; font-size:1rem; padding-top:2px; }
+    .place { margin:0; font-size:1.12rem; font-weight:750; }
+    .note { margin:3px 0 0; color:var(--muted); font-size:.98rem; }
+    .timeline { position:relative; display:grid; gap:0; }
+    .timeline::before { content:""; position:absolute; top:12px; bottom:12px; left:88px; width:2px; background:var(--line); }
+    .timeline-stop { position:relative; display:grid; grid-template-columns:70px 20px 1fr; gap:9px; padding:0 0 20px; }
+    .timeline-stop:last-child { padding-bottom:0; }
+    .timeline-stop time { text-align:right; }
+    .timeline-dot { position:relative; z-index:1; width:12px; height:12px; margin:6px auto 0; border:3px solid var(--cream); border-radius:50%; background:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+    .timeline-card { padding:14px 16px; background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 3px 12px rgba(82,55,35,.05); }
+    footer { margin-top:28px; padding:16px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.86rem; }
+    @media (max-width:380px) { main { width:min(100% - 24px, 680px); } .stop { grid-template-columns:70px 1fr; padding:14px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">台南・兩天一夜</p>
+      <h1>隨意遊走</h1>
+      <p class="intro">台南｜示意日期：6 月 15–16 日<br>慢慢走、好好吃，把古城的午後和夜色都收進旅程裡。</p>
+    </header>
+
+    <section class="day" aria-labelledby="day-one">
+      <div class="day-title"><h2 id="day-one">第一天</h2><span>古城散步與夜食</span></div>
+      <div class="stops">
+        <article class="stop"><time datetime="10:00">10:00</time><div><p class="place">示意店家｜台南早午餐</p><p class="note">先用一頓舒服的早午餐暖身，集合後再開始逛老城。</p></div></article>
+        <article class="stop"><time datetime="12:00">12:00</time><div><p class="place">赤崁樓</p><p class="note">看看紅磚古蹟與院落光影，順便感受台南的歷史節奏。</p></div></article>
+        <article class="stop"><time datetime="15:00">15:00</time><div><p class="place">神農街</p><p class="note">沿著老街慢慢散步，挑幾間小店逛逛、拍些生活感照片。</p></div></article>
+        <article class="stop"><time datetime="18:30">18:30</time><div><p class="place">示意店家｜台南小吃晚餐</p><p class="note">用一桌在地小吃收尾，吃飽後再找間小酒吧或甜點店聊天。</p></div></article>
+      </div>
+    </section>
+
+    <section class="day" aria-labelledby="day-two">
+      <div class="day-title"><h2 id="day-two">第二天</h2><span>早餐、海風與返程</span></div>
+      <div class="timeline">
+        <article class="timeline-stop"><time datetime="09:00">09:00</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">示意店家｜台南早餐</p><p class="note">吃碗熱湯或一份蛋餅，補足今天散步的能量。</p></div></article>
+        <article class="timeline-stop"><time datetime="10:30">10:30</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">安平古堡</p><p class="note">從古堡與老街開始，邊走邊認識台南港城的故事。</p></div></article>
+        <article class="timeline-stop"><time datetime="14:00">14:00</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">漁光島</p><p class="note">到海邊吹風看夕陽前的光，讓旅程留一段空白時間。</p></div></article>
+        <article class="timeline-stop"><time datetime="16:30">16:30</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">示意店家｜伴手禮</p><p class="note">買點甜甜的台南味帶回家，之後依交通時間彈性返程。</p></div></article>
+      </div>
+    </section>
+
+    <footer>※ 店名與時間皆為示意，確認交通、營業時間後再更新。</footer>
+
+    <section class="day" aria-labelledby="before-trip">
+      <div class="day-title"><h2 id="before-trip">行前提醒</h2><span>出發前看一下</span></div>
+      <div class="stops">
+        <article class="stop"><time>天氣</time><div><p class="place">示意：晴時多雲</p></div></article>
+        <article class="stop"><time>攜帶</time><div><p class="place">示意：水壺、雨具、防曬用品</p></div></article>
+        <article class="stop"><time>集合</time><div><p class="place">示意：第一天 09:45，台南車站前站</p></div></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
