@@ -38,6 +38,30 @@
     .timeline-dot { position:relative; z-index:1; width:12px; height:12px; margin:6px auto 0; border:3px solid var(--cream); border-radius:50%; background:var(--accent); box-shadow:0 0 0 1px var(--accent); }
     .timeline-card { padding:14px 16px; background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 3px 12px rgba(82,55,35,.05); }
     .cover { display:block; width:100%; height:auto; border-radius:18px; margin:0 0 24px; }
+    .day-picker { display:flex; gap:8px; margin:0 0 20px; }
+    .day-picker button { flex:1; padding:10px 12px; border:1px solid var(--line); border-radius:999px; background:var(--card); color:var(--ink); font:inherit; cursor:pointer; }
+    .day-picker button.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .check { display:flex; align-items:flex-start; gap:10px; }
+    .check input { flex:0 0 auto; width:20px; height:20px; margin:3px 0 0; accent-color:var(--accent); }
+    .check input:checked + .stop-content, .check input:checked + .timeline-card { opacity:.55; }
+    .check input:checked + .stop-content .place, .check input:checked + .timeline-card .place { text-decoration:line-through; }
+    .stop-content { flex:1; }
+    .timeline-check { display:contents; }
+    .timeline-check input { grid-column:1; grid-row:1; margin:6px 0 0; width:20px; height:20px; accent-color:var(--accent); }
+    .timeline-check .timeline-dot { grid-column:2; grid-row:1; }
+    .timeline-check .timeline-card { grid-column:3; grid-row:1; }
+    .day.is-hidden { display:none; }
+    .vote-form { display:grid; gap:12px; }
+    .vote-form input[type="text"] { width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--ink); font:inherit; }
+    .vote-options { display:grid; gap:8px; }
+    .vote-option { display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--card); }
+    .vote-option input { accent-color:var(--accent); }
+    .vote-form button { padding:11px 16px; border:0; border-radius:999px; background:var(--accent); color:#fff; font:inherit; cursor:pointer; }
+    .vote-form button:disabled { opacity:.6; cursor:wait; }
+    .vote-message { min-height:1.6em; margin:0; color:var(--muted); font-size:.9rem; }
+    .vote-results { display:grid; gap:8px; margin-top:14px; }
+    .vote-result { display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border-bottom:1px solid var(--line); }
+    .vote-count { color:var(--accent); font-weight:800; }
     footer { margin-top:28px; padding:16px 4px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.86rem; }
     @media (max-width:380px) { main { width:min(100% - 24px, 680px); } .stop { grid-template-columns:70px 1fr; padding:14px; } }
   </style>
@@ -52,23 +76,28 @@
       <p class="intro">集合地點：高鐵台中站</p>
     </header>
 
-    <section class="day" aria-labelledby="day-one">
-      <div class="day-title"><h2 id="day-one">第一天</h2><span>古城散步與夜食</span></div>
+    <nav class="day-picker" aria-label="選擇要查看的行程日">
+      <button type="button" class="active" data-day="day-one">第一天</button>
+      <button type="button" data-day="day-two">第二天</button>
+    </nav>
+
+    <section class="day" id="day-one" aria-labelledby="day-one-title">
+      <div class="day-title"><h2 id="day-one-title">第一天</h2><span>古城散步與夜食</span></div>
       <div class="stops">
-        <article class="stop"><time datetime="10:00">10:00</time><div><p class="place">示意店家｜台南早午餐</p><p class="note">先用一頓舒服的早午餐暖身，集合後再開始逛老城。</p></div></article>
-        <article class="stop"><time datetime="12:00">12:00</time><div><p class="place">赤崁樓</p><p class="note">看看紅磚古蹟與院落光影，順便感受台南的歷史節奏。</p></div></article>
-        <article class="stop"><time datetime="15:00">15:00</time><div><p class="place">神農街</p><p class="note">沿著老街慢慢散步，挑幾間小店逛逛、拍些生活感照片。</p></div></article>
-        <article class="stop"><time datetime="18:30">18:30</time><div><p class="place">示意店家｜台南小吃晚餐</p><p class="note">用一桌在地小吃收尾，吃飽後再找間小酒吧或甜點店聊天。</p></div></article>
+        <article class="stop"><time datetime="10:00">10:00</time><label class="check"><input type="checkbox" data-stop="day-one-1"><span class="stop-content"><p class="place">示意店家｜台南早午餐</p><p class="note">先用一頓舒服的早午餐暖身，集合後再開始逛老城。</p></span></label></article>
+        <article class="stop"><time datetime="12:00">12:00</time><label class="check"><input type="checkbox" data-stop="day-one-2"><span class="stop-content"><p class="place">赤崁樓</p><p class="note">看看紅磚古蹟與院落光影，順便感受台南的歷史節奏。</p></span></label></article>
+        <article class="stop"><time datetime="15:00">15:00</time><label class="check"><input type="checkbox" data-stop="day-one-3"><span class="stop-content"><p class="place">神農街</p><p class="note">沿著老街慢慢散步，挑幾間小店逛逛、拍些生活感照片。</p></span></label></article>
+        <article class="stop"><time datetime="18:30">18:30</time><label class="check"><input type="checkbox" data-stop="day-one-4"><span class="stop-content"><p class="place">示意店家｜台南小吃晚餐</p><p class="note">用一桌在地小吃收尾，吃飽後再找間小酒吧或甜點店聊天。</p></span></label></article>
       </div>
     </section>
 
-    <section class="day" aria-labelledby="day-two">
-      <div class="day-title"><h2 id="day-two">第二天</h2><span>早餐、海風與返程</span></div>
+    <section class="day is-hidden" id="day-two" aria-labelledby="day-two-title">
+      <div class="day-title"><h2 id="day-two-title">第二天</h2><span>早餐、海風與返程</span></div>
       <div class="timeline">
-        <article class="timeline-stop"><time datetime="09:00">09:00</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">示意店家｜台南早餐</p><p class="note">吃碗熱湯或一份蛋餅，補足今天散步的能量。</p></div></article>
-        <article class="timeline-stop"><time datetime="10:30">10:30</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">安平古堡</p><p class="note">從古堡與老街開始，邊走邊認識台南港城的故事。</p></div></article>
-        <article class="timeline-stop"><time datetime="14:00">14:00</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">漁光島</p><p class="note">到海邊吹風看夕陽前的光，讓旅程留一段空白時間。</p></div></article>
-        <article class="timeline-stop"><time datetime="16:30">16:30</time><span class="timeline-dot" aria-hidden="true"></span><div class="timeline-card"><p class="place">示意店家｜伴手禮</p><p class="note">買點甜甜的台南味帶回家，之後依交通時間彈性返程。</p></div></article>
+        <article class="timeline-stop"><time datetime="09:00">09:00</time><label class="timeline-check"><input type="checkbox" data-stop="day-two-1"><span class="timeline-dot" aria-hidden="true"></span><span class="timeline-card"><p class="place">示意店家｜台南早餐</p><p class="note">吃碗熱湯或一份蛋餅，補足今天散步的能量。</p></span></label></article>
+        <article class="timeline-stop"><time datetime="10:30">10:30</time><label class="timeline-check"><input type="checkbox" data-stop="day-two-2"><span class="timeline-dot" aria-hidden="true"></span><span class="timeline-card"><p class="place">安平古堡</p><p class="note">從古堡與老街開始，邊走邊認識台南港城的故事。</p></span></label></article>
+        <article class="timeline-stop"><time datetime="14:00">14:00</time><label class="timeline-check"><input type="checkbox" data-stop="day-two-3"><span class="timeline-dot" aria-hidden="true"></span><span class="timeline-card"><p class="place">漁光島</p><p class="note">到海邊吹風看夕陽前的光，讓旅程留一段空白時間。</p></span></label></article>
+        <article class="timeline-stop"><time datetime="16:30">16:30</time><label class="timeline-check"><input type="checkbox" data-stop="day-two-4"><span class="timeline-dot" aria-hidden="true"></span><span class="timeline-card"><p class="place">示意店家｜伴手禮</p><p class="note">買點甜甜的台南味帶回家，之後依交通時間彈性返程。</p></span></label></article>
       </div>
     </section>
 
@@ -84,6 +113,81 @@
         <article class="stop"><time>集合</time><div><p class="place">示意：第一天 09:45，台南車站前站</p></div></article>
       </div>
     </section>
+
+    <section class="day" aria-labelledby="vote-title">
+      <div class="day-title"><h2 id="vote-title">晚餐投票</h2><span>選一個想吃的</span></div>
+      <form class="vote-form" id="vote-form">
+        <label for="vote-nickname" class="note">暱稱</label>
+        <input id="vote-nickname" name="nickname" type="text" maxlength="40" placeholder="請輸入暱稱" required>
+        <div class="vote-options" role="radiogroup" aria-label="晚餐選項">
+          <label class="vote-option"><input type="radio" name="choice" value="台南小吃" required> 台南小吃</label>
+          <label class="vote-option"><input type="radio" name="choice" value="牛肉湯"> 牛肉湯</label>
+          <label class="vote-option"><input type="radio" name="choice" value="火鍋"> 火鍋</label>
+        </div>
+        <button type="submit">送出投票</button>
+        <p class="vote-message" id="vote-message" role="status" aria-live="polite"></p>
+      </form>
+      <div class="vote-results" id="vote-results" aria-live="polite"></div>
+    </section>
   </main>
+  <script>
+    const savedStops = JSON.parse(localStorage.getItem('tainan-trip-checks') || '{}');
+    const dayButtons = document.querySelectorAll('[data-day]');
+    const daySections = document.querySelectorAll('.day[id^="day-"]:not(#before-trip)');
+    const stopChecks = document.querySelectorAll('[data-stop]');
+    stopChecks.forEach((check) => {
+      check.checked = Boolean(savedStops[check.dataset.stop]);
+      check.addEventListener('change', () => {
+        savedStops[check.dataset.stop] = check.checked;
+        localStorage.setItem('tainan-trip-checks', JSON.stringify(savedStops));
+      });
+    });
+    dayButtons.forEach((button) => button.addEventListener('click', () => {
+      dayButtons.forEach((item) => item.classList.toggle('active', item === button));
+      daySections.forEach((section) => section.classList.toggle('is-hidden', section.id !== button.dataset.day));
+    }));
+
+    const SUPABASE_URL = 'https://vrjecrwurazxvskjiylm.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_DCUPiKoDB6Ilw8lAmrTa7Q_Aec8vcjn';
+    const voteEndpoint = `${SUPABASE_URL}/rest/v1/dinner_votes`;
+    const voteHeaders = { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` };
+    const voteForm = document.querySelector('#vote-form');
+    const voteMessage = document.querySelector('#vote-message');
+    const voteResults = document.querySelector('#vote-results');
+    const voteOptions = ['台南小吃', '牛肉湯', '火鍋'];
+
+    async function loadVoteResults() {
+      const response = await fetch(`${voteEndpoint}?select=choice` , { headers: voteHeaders });
+      if (!response.ok) throw new Error('無法讀取投票結果');
+      const votes = await response.json();
+      const counts = Object.fromEntries(voteOptions.map((option) => [option, 0]));
+      votes.forEach((vote) => { if (vote.choice in counts) counts[vote.choice] += 1; });
+      voteResults.innerHTML = voteOptions.map((option) => `<div class="vote-result"><span>${option}</span><span class="vote-count">${counts[option]} 票</span></div>`).join('');
+    }
+
+    voteForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = voteForm.querySelector('button');
+      button.disabled = true;
+      voteMessage.textContent = '送出中…';
+      const formData = new FormData(voteForm);
+      try {
+        const response = await fetch(voteEndpoint, {
+          method: 'POST', headers: { ...voteHeaders, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify({ nickname: String(formData.get('nickname')).trim(), choice: formData.get('choice') })
+        });
+        if (!response.ok) throw new Error('投票未成功');
+        voteForm.reset();
+        voteMessage.textContent = '投票成功！';
+        await loadVoteResults();
+      } catch (error) {
+        voteMessage.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    loadVoteResults().catch(() => { voteMessage.textContent = '目前無法載入投票結果，請稍後再試。'; });
+  </script>
 </body>
 </html>
